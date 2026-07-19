@@ -1,0 +1,15 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Knit intermediates
+*.log
+*.tex
+*.utf8.md
+*.knit.md
+
+# CI output
+ci-output/

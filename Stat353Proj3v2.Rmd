@@ -1,0 +1,399 @@
+---
+title: "Project 3 - Exploring Homes in CA, NJ, NY, and PA"
+author: "Daniel Leone"
+date: "2023-11-29"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(psych)
+```
+
+## BACKGROUND
+
+The dataset utilized for this analysis is "HomesForSale" obtained from https://www.lock5stat.com/datapage3e.html. The following information provides details about "HomesForSale" and was taken from the documentation given for the dataset.
+
+Description
+Data on homes for sale in four states in 2019
+
+Format
+A data frame with 120 observations on the following 5 variables.
+
+Details
+Data for samples of homes for sale in each state, selected from zillow.com.
+** Updated for 3e (earlier version from 2010 is in HomesForSale2e). **
+
+Source
+Data collected from www.zillow.com in 2019.
+
+## TASK
+
+Explore the following questions:
+
+(1) Use the data only for California. How much does the size of a home influence its price?
+
+(2) Use the data only for California. How does the number of bedrooms of a home influence its price?
+
+(3) Use the data only for California. How does the number of bathrooms of a home influence its price?
+
+(4) Use the data only for California. How do the size,  the number of bedrooms, and  the number of bathrooms of a home jointly influence its price?
+
+(5) Are there significant differences in home prices among the four states (CA, NY, NJ, PA)? This will help you determine if the state in which a home is located has a significant impact on its price. All data should be used.
+
+The primary objective of this analysis is to examine the dynamics of home pricing, concentrating on California properties. Our investigation kicks off by isolating California data to understand how individual factors—home size, bedrooms, and bathrooms—affect home prices. Utilizing linear regression, we quantify these influences and evaluate their statistical significance. Next, we expand our focus to assess the combined impact of size, bedrooms, and bathrooms on home prices. The final phase widens the scope to include four states—California, New York, New Jersey, and Pennsylvania. Through an ANOVA approach, we aim to determine if a home's location significantly influences its price. This concise analysis yields valuable insights into housing prices across states, enhancing our understanding of the factors that mold real estate prices.
+
+## DATA
+
+### Dataset
+```{r}
+### Dataset
+homesForSale = read.csv("https://www.lock5stat.com/datasets3e/HomesForSale.csv")
+head(homesForSale)
+
+CA_data <- homesForSale %>% filter(State == "CA")
+```
+### Elements
+State Location of the home (CA, NJ, NY, or PA)
+Price Asking price (in $1,000’s)
+Size Area of all rooms (in 1,000’s sq. ft.)
+Beds Number of bedrooms
+Baths Number of bathrooms
+
+## ANALYSIS
+
+### (1) Use the data only for California. How much does the size of a home influence its price?
+
+#### Hypotheses
+
+Null Hypothesis (H0): The Size of a home does not have a significant impact on its Price in California.
+H:βSize=0
+
+Alternative Hypothesis (H1): The Size of a home has a significant influence on its Price in California.
+H1:βSize≠0
+
+```{r}
+# Size vs Price in California
+
+model <- lm(Price ~ Size, data = CA_data)
+summary(model)
+
+plot(CA_data$Size, CA_data$Price, main = "Size vs Price in California", xlab = "Size", ylab = "Price")
+abline(model, col = "red")
+```
+
+#### Plots
+
+Scatter Plot: The scatter plot reveals a positive slope, indicating a moderate positive correlation between the Size of a home and its Price in CA. The relationship appears to be reasonably strong, with a discernible upward trend. This supports the assumption of a linear relationship between Size and Price.
+
+#### Interpretation
+
+The following insights have been derived from a linear model created in R to evaluate singular linear regression. The analysis incorporates information obtained from plots, offering a holistic perspective on the relationship between home size and price in California.
+
+##### Key Findings
+
+Regression Equation: Price = −56.82 + 0.34 × Size
+
+Intercept Significance: The intercept (−56.82) is not statistically significant (p-value = 0.716), indicating that the predicted price when the Size is zero may lack practical relevance.
+
+Size Coefficient: The Size coefficient (0.34) is highly statistically significant (p-value = 0.0005), suggesting a substantial influence of home Size on Price in CA.
+
+Correlation: The linear regression model reveals a positive correlation between Size and Price, implying that as the Size increases, the Price tends to increase.
+
+##### Model Performance
+
+R-Squared: 35.94% of the variability in home prices is explained by home size.
+
+Adjusted R-Squared: 33.65%, aligning with expectations for a singular linear regression model.
+
+F-Statistic: 15.71, highly significant (p-value = 0.0005), supporting the relationship between home size and price.
+
+#### Conclusion
+
+Size is found to be statistically significant in influencing home Price in CA. This is supported by both the scatter plot, which demonstrates a discernible positive correlation, and the coefficient of 0.34 with a low p-value of 0.0005. The linear regression model, with an R-squared of 35.94%, indicates that 35.94% of the variability in home Price is explained by the home Size. The F-statistic of 15.71 further reinforces the significance of the relationship. Consequently, we reject the null hypothesis, affirming that the size of a home has a substantial and statistically significant impact on its price in California.
+  
+### (2) Use the data only for California. How does the number of bedrooms of a home influence its price?
+
+#### Hypotheses
+
+Null Hypothesis (H0): The number of bedrooms of a home does not significantly influence its price in California.
+H0:βBeds=0
+
+Alternative Hypothesis (H1): The number of bedrooms of a home significantly influences its price in California.
+H1:βBeds≠0
+
+```{r}
+# Bedrooms vs Price in California
+
+model <- lm(Price ~ Beds, data = CA_data)
+summary(model)
+
+plot(CA_data$Beds, CA_data$Price, main = "Bedrooms vs Price in California", xlab = "Number of Bedrooms", ylab = "Price")
+abline(model, col = "red")
+```
+
+#### Plots
+
+Scatter Plot:
+The scatter plot illustrates a subtle positive slope, indicating a weak positive correlation between the number of Beds and home Price in CA. Notably, there are deviations from the central line, particularly around the Number of Bedrooms value of 3.0.
+
+#### Interpretation
+
+The following insights have been derived from a linear model created in R to evaluate singular linear regression. The analysis incorporates information obtained from plots, offering a holistic perspective on the relationship between number of bedrooms and price in California.
+
+##### Key Findings
+
+Regression Equation: Price = 269.76 + 84.77 × Beds
+
+Intercept Significance: The intercept (269.76) is not statistically significant (p-value = 0.258), suggesting that the predicted Price when the number of Beds is zero may lack practical relevance.
+
+Beds Coefficient: The coefficient for the number of Beds (84.77) is not statistically significant (p-value = 0.255), indicating a lack of clear influence on home Price in CA.
+
+##### Model Performance
+
+R-Squared: The model explains only 4.61% of the variability in home Price based on the number of Beds.
+
+Adjusted R-Squared: 1.20%, indicating a limited improvement when considering the number of Beds in the model.
+
+F-Statistic: With a value of 1.352 and a p-value of 0.2548, the model lacks strong statistical support.
+
+#### Conclusion
+
+The number of Beds is not found to be statistically significant in influencing home Price in CA. Both the intercept (p-value = 0.258) and the coefficient for the number of Beds (p-value = 0.255) are not statistically significant, suggesting that the number of Beds may not have a significant impact on home Price. The weak positive correlation observed in the scatter plot further supports the lack of a clear relationship. Consequently, we fail to reject the null hypothesis, indicating that the number of Beds does not significantly influence home Price in CA based on the provided data.
+
+### (3) Use the data only for California. How does the number of bathrooms of a home influence its price?
+
+#### Hypotheses
+
+Null Hypothesis (H0): The number of bathrooms of a home does not significantly influence its price in California.
+H0:βBaths=0
+
+Alternative Hypothesis (H1): The number of bathrooms of a home significantly influences its price in California.
+H1:βBaths≠0
+
+```{r}
+# (3) Bathrooms vs Price in California
+
+model <- lm(Price ~ Baths, data = CA_data)
+summary(model)
+
+plot(CA_data$Baths, CA_data$Price, main = "Bathrooms vs Price in California", xlab = "Number of Bathrooms", ylab = "Price")
+abline(model, col = "red")
+```
+
+#### Plots
+
+Scatter Plot:
+The scatter plot demonstrates a positive slope, suggesting a positive correlation on average between the number of Baths and home Price in CA. However, deviations from the central line are notable, particularly around the Number of Bathrooms value of 2.0. An outlier at 2.0, positioned above the regression line, may be influencing the results.
+
+#### Interpretation
+
+The following insights have been derived from a linear model created in R to evaluate singular linear regression. The analysis incorporates information obtained from plots, offering a holistic perspective on the relationship between number of bathrooms and price in California.
+
+##### Key Findings
+
+Regression Equation: Price = 90.71 + 194.74 × Baths
+
+Intercept Significance: The intercept (90.71) is not statistically significant (p-value = 0.546), indicating that the predicted Price when the number of Baths is zero may lack practical relevance.
+
+Baths Coefficient: The coefficient for the number of Baths (194.74) is statistically significant (p-value = 0.00409), suggesting a substantial influence on home Price in California.
+
+##### Model Performance
+
+R-Squared: The model explains 25.88% of the variability in home Price based on the number of Baths.
+
+Adjusted R-Squared: 23.24%, indicating a reasonable fit when considering the number of Baths in the model.
+
+F-Statistic: With a value of 9.779 and a p-value of 0.004092, the model is statistically significant.
+
+##### Conclusion
+
+The number of Baths is found to be statistically significant in influencing home Price in California. The positive correlation observed in the scatter plot aligns with the coefficient's significance. However, it's important to note the presence of deviations and a potential outlier around the Number of Bathrooms value of 2.0, which may warrant further investigation. The substantial coefficient and statistical significance lead us to reject the null hypothesis, affirming that the number of Baths has a significant impact on home Price in California based on the provided data.
+
+### (4) Use the data only for California. How do the size,  the number of bedrooms, and  the number of bathrooms of a home jointly influence its price?
+
+#### Hypotheses
+
+Null Hypothesis (H0): The size, number of bedrooms, and number of bathrooms jointly do not significantly influence the price of a home in California.
+H0:βSize=βBeds=βBaths=0
+
+Alternative Hypothesis (H1): At least one of the coefficients for size, number of bedrooms, or number of bathrooms is not equal to zero, indicating a significant joint influence on home price in California.
+H1:At least one of βSize,βBeds,βBaths ≠ 0
+
+```{r}
+# (4) Multiple Regression in California
+
+model <- lm(Price ~ Size + Beds + Baths, data = CA_data)
+summary(model)
+
+plot(fitted(model), resid(model), main = "Residual Plot", xlab = "Fitted Values", ylab = "Residuals")
+abline(h = 0, col = "red")
+```
+
+#### Plots
+
+Residual Plot:
+The residual plot displays a relatively random and evenly distributed pattern, suggesting homoscedasticity. The balance of points above and below the zero line indicates consistent variance across the range of predictors.
+
+#### Interpretation
+
+The following insights have been derived from a linear model created in R to evaluate multiple linear regression. The analysis incorporates information obtained from plots, offering a holistic perspective on the relationship between size, number of bedromms, and number of bathrooms compared to price in California.
+
+##### Key Findings
+
+Regression Equation: Price = −41.56 + 0.28 × Size − 33.70 × Beds + 83.98 × Baths
+
+Intercept Significance: The intercept (-41.56) is not statistically significant (p-value = 0.8449), suggesting that the predicted Price when Size, number of Beds, and number of Baths are all zero may lack practical relevance.
+
+Coefficients Significance:
+
+The coefficient for Size (0.28) is statistically significant (p-value = 0.0259), indicating a positive influence on home prices.
+
+The coefficient for Beds (-33.70) is not statistically significant (p-value = 0.6239), suggesting a lack of clear influence on home prices.
+
+The coefficient for Baths (83.98) is not statistically significant (p-value = 0.2839), indicating potential variability in its influence.
+
+##### Model Performance
+
+R-Squared: The model explains 39.12% of the variability in home prices based on size, number of bedrooms, and number of bathrooms.
+
+Adjusted R-Squared: 32.09%, indicating a reasonable fit when considering all three predictors in the model.
+
+F-Statistic: With a value of 5.568 and a p-value of 0.004353, the model is statistically significant.
+
+#### Conclusion
+
+The joint influence of Size, Beds, and Baths on the Price in CA is deemed statistically significant, as indicated by the F-statistic of 5.568 with a p-value of 0.004353. Although Beds and Baths do not individually contribute significantly to predicting Price, the substantial and statistically significant coefficient for Size in the multiple regression model suggests that Size plays a pivotal role in influencing Price. This implies that, when considered together, these variables collectively contribute to explaining the variability in Price. The non-significant intercept indicates that there may be other factors not accounted for in the model. Nonetheless, the overall model, with its significant F-statistic and improved R-squared value from the singular regressions, provides a more comprehensive understanding of the interplay between Size, Beds, and Baths in determining housing Price in California. 
+
+### (5) Are there significant differences in home prices among the four states (CA, NY, NJ, PA)? This will help you determine if the state in which a home is located has a significant impact on its price. All data should be used.
+
+#### Hypotheses
+
+Null Hypothesis (H0): There are no significant differences in mean home prices among the states (CA, NY, NJ, PA).
+H0:βCA=βNY=βNJ=βPA=0
+ 
+Alternative Hypothesis (H1): There are significant differences in mean home prices among the states (CA, NY, NJ, PA).
+H1:At least one of βCA,βNY,βNJ,βPA ≠ 0
+
+```{r}
+# (5) ANOVA for Price differences among states
+model <- aov(Price ~ State, data = homesForSale)
+summary(model)
+
+boxplot(Price ~ State, data = homesForSale, main = "Boxplot of Price by State", xlab = "State", ylab = "Price")
+# Add a title
+title(main = "Boxplot of Price by State")
+
+# Post-hoc tests (if ANOVA is significant)
+TukeyHSD(model)
+
+# Extract residuals
+residuals <- resid(model)
+
+# Extract fitted values
+fitted_values <- fitted(model)
+
+# Plot residuals vs. fitted values (to check for constant variance)
+plot(residuals ~ fitted_values, 
+     main = "Residuals vs. Fitted", 
+     xlab = "Fitted Values", 
+     ylab = "Residuals"
+    )
+# Add a horizontal line through y = 0 (i.e., add the x-axis)
+abline(h = 0, col = "red")
+
+# Plot histogram of residuals
+hist(residuals(model), main = "Histogram of Residuals", xlab = "Residuals", prob = TRUE, col = "lightblue")
+
+# Overlay a bell curve
+curve(dnorm(x, mean = mean(residuals(model)), sd = sd(residuals(model))), add = TRUE, col = "red", lwd = 2)
+
+# Plot the quantile-quantile (Q-Q) plot (to check normality)
+qqnorm(residuals)
+qqline(residuals(model), col = "red")
+
+# Perform Shapiro-Wilk test for normality of residuals
+shapiro_test <- shapiro.test(residuals)
+print(shapiro_test)
+```
+
+#### Plots
+
+Side-By-Side Boxplot:
+
+CA: The median value is substantially higher than the other states. There is a strong positive skew in home prices indicated by the upward movement of the median, the smaller body portion above the median and the longer positive whisker,
+
+NJ: The median value is approximately the same as NY and PA. There is a relatively weak positive skew in home prices indicated by the downward movement of the media, the larger body portion above the median (suggesting a more gradual spread) and the longer positive whisker.
+
+NY: The median value is approximately the same as NJ and PA. There is a relatively moderate positive skew in home prices indicated by the downward movement of the media, the larger body portion above the median (suggesting a more gradual spread) and the longer positive whisker. There are notable outliers observed on the high side of the graph.
+
+PA: The median value is approximately the same as NJ and NY. The is a weaker positive skew in home prices indicated by the downward movement of the media, the larger body portion above the median (suggesting a more gradual spread) and the longer positive whisker.
+
+
+Residual Plot:
+
+Heteroscedasicity is obeserved in this plot. In 3 of the 4 observable x values, there is a larger concentration of points below zero. Two of the x values shows a much larger variabilty than the others with larger outliers.
+
+Histogram of Residuals:
+
+The normal bell curve is shifted left with a larger tail to the right, suggesting a right skew. One column projects noticeably higher than the curve. These suggest that there is some deviation from normal in this model.
+
+Q-Q Plot:
+
+There is some right skewness noteness in the Q-Q plot. The tails are not tightly condensed. The right tail is more spread out and shows large deviation from the line, indicating significant outliers and deviation from normal.
+
+#### Interpretation
+
+The following insights have been derived from conducting an ANOVA test in R on the data set. A Post-Hoc and Shapiro-Wilk Test, in conjunction with information obtained from plots offers a holistic perspective on the comparison of pricing from each state.
+
+##### Key Findings
+
+ANOVA:
+The p-value in the ANOVA table is highly significant (p = 0.000148), suggesting that there are indeed significant differences in home prices among the states.
+
+Tukey Multiple Comparisons:
+
+The Tukey multiple comparisons test further explores the differences between pairs of states. All three pair-wise comparisons involving CA have significant differences (p < 0.05), indicating that CA has significantly different home prices compared to NJ, NY, and PA.
+
+Among the other states (NJ, NY, PA), only the comparison between NJ and PA is not significant (p = 0.7224830), suggesting that these two states may have similar home prices.
+
+##### Model Performance
+
+Fit: The ANOVA table presents an F-statistic of 7.355, indicating that the model, incorporating the State variable, effectively explains the variability in home prices among states. However, the presence of heteroscedasticity in the residual plot raises concerns, suggesting that the variability in home prices is not consistent across all levels of the State variable. This violation of the homogeneity of variance assumption in ANOVA calls for caution in interpreting the model results.
+
+Normality: The assessment of normality for residuals consistently indicates a departure from normal distribution. Both the histogram and Q-Q plot display characteristics of a right-skewed distribution, with the former revealing a pronounced tail to the right and the latter showing clear deviations from the expected straight line for normality. Additionally, the Shapiro-Wilk test provides statistical support for this observation, as the obtained p-value falls below the standard significance level of 0.05, rejecting the null hypothesis and confirming that the residuals do not adhere to a normal distribution. The presence of outliers in the histogram further accentuates the departure from normality in the residual data.
+
+#### Conclusion
+
+The analysis of home prices among the four states (CA, NY, NJ, PA) establishes statistically significant differences, as evidenced by a highly significant p-value in the ANOVA test. Tukey multiple comparisons further highlight California's distinctively higher prices compared to NJ, NY, and PA. Notably, NJ and PA exhibit similar pricing, while NY shows notable distinctions. The model incorporating the State variable effectively explains price variability, supported by the ANOVA F-statistic. However, concerns arise from heteroscedasticity, indicating uneven variability across states. Additionally, deviations from normality in residuals, affirmed by the Shapiro-Wilk test and visual inspections, underscore the need for caution in relying on parametric assumptions. While the model offers valuable insights into state-wise pricing differences, future refinements addressing heteroscedasticity and normality deviations are recommended for more robust conclusions.
+
+## Summary
+
+### Significant Takeaways
+
+Home size is a crucial factor influencing prices in California.
+The number of bedrooms may not be a significant determinant of home prices in the state.
+The number of bathrooms plays a significant role in influencing home prices in California.
+Consideration of size, bedrooms, and bathrooms collectively provides a more comprehensive understanding of pricing dynamics.
+California stands out with significantly higher home prices compared to other states, but model limitations should be acknowledged.
+
+### Future Investigations
+
+Further exploration of potential outliers and influential data points in the models is warranted, especially in the context of the number of bathrooms.
+Consideration of additional variables beyond size, bedrooms, and bathrooms that could contribute to the variability in home prices.
+Refinement of models to address heteroscedasticity and deviations from normality, enhancing the robustness of the findings.
+Comparative analyses on a more granular level, such as specific regions within each state, to uncover localized factors influencing home prices.
+
+### Conclusion
+
+This comprehensive analysis of the data provides a foundation for understanding the nuanced dynamics of home pricing, offering insights that can guide future research and real estate decision-making. The investigation looked at variables individually and then together for a more complete understanding of the data. After a complete look at the state a CA, prices were compared across all states resulting in the finding that CA housing is substantially higher than the other states in the set. The findings underscore the complexity of factors influencing home prices and emphasize the need for careful consideration of model assumptions and potential limitations in drawing conclusions.
+
+## Resources
+
+The data link: <https://www.lock5stat.com/datapage3e.html>
+
+
