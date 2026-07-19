@@ -162,7 +162,13 @@ the same class of failure on a later run -- em dashes (`—`), curly
 apostrophes (`'`), a Unicode minus sign (`−`), and multiplication signs
 (`×`) -- all replaced with LaTeX/pandoc-safe ASCII equivalents (`---`
 markdown em-dash syntax, straight apostrophes, hyphens, and `x`
-respectively).
+respectively). Since the raw LaTeX math syntax (`$\beta_{Size}$`, `\neq`)
+is less immediately readable in the plain-text source than the original
+Unicode symbols were, a short notation note was added at the top of the
+Analysis section explaining that `$\beta$` denotes a regression
+coefficient and `\neq` denotes "not equal to" -- so the formal hypothesis
+statements stay legible without requiring the reader to mentally decode
+LaTeX syntax.
 
 **Verification**: `pdflatex`/`xelatex` (TeXLive) were available locally,
 so the exact math syntax used in the fix (`$\beta_{Size} = 0$`,

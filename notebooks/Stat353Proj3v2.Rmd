@@ -66,6 +66,12 @@ Baths Number of bathrooms
 
 ## ANALYSIS
 
+**Notation:** Each hypothesis below is stated formally beneath its plain-language
+version. $\beta$ denotes the regression coefficient for the named predictor
+(e.g. $\beta_{Size}$ is the coefficient on Size); $\neq$ denotes "not equal to."
+A null hypothesis of $\beta = 0$ means the predictor has no effect on Price;
+the alternative $\beta \neq 0$ means it does.
+
 ### (1) Use the data only for California. How much does the size of a home influence its price?
 
 #### Hypotheses
