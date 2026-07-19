@@ -39,7 +39,7 @@ overall conclusion) and a Resources section citing the data source.
 ## Overview
 
 `Stat353Proj3v2.Rmd` is a single R Markdown report (knits to both Word and
-PDF; `Stat353Proj3v2.pdf` is the committed rendered output) structured as
+PDF; `docs/Report.pdf` is the committed rendered output) structured as
 Background / Task / Data / Analysis (one subsection per question) /
 Summary / Resources. Findings, verified against the report's own R output:
 
@@ -145,5 +145,5 @@ hypothesis, model, plot, interpretation, and conclusion; the state-level
 ANOVA additionally includes post-hoc comparisons and a full set of
 residual diagnostics that honestly report where the model's assumptions
 are questionable (heteroscedasticity, non-normal residuals) rather than
-omitting that discussion. `Stat353Proj3v2.pdf` is the rendered output of
+omitting that discussion. `docs/Report.pdf` is the rendered output of
 the current `.Rmd`.
