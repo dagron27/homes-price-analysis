@@ -61,6 +61,16 @@ Summary / Resources. Findings, verified against the report's own R output:
    conclusion notes this as a caveat rather than treating the significant
    p-value as the final word.
 
+## Repository Organization
+
+The original submission had `Stat353Proj3v2.Rmd`/`.pdf` and the
+`HomesForSale*` data files together at the repository root. They have
+been reorganized into `notebooks/`, `docs/`, and `data/` for
+portfolio-wide consistency with sibling repositories; no changes were
+made to the `.Rmd`'s own content as part of this move (only the two
+LaTeX-compilation fixes documented below under Known Issues touched the
+`.Rmd` itself).
+
 ## Dependencies
 
 R packages used (declared via `library()` in the Rmd's setup chunk):
